@@ -1,6 +1,7 @@
 console.log("loaded js file")
 
 const displayNumber = document.createElement("div")
+displayNumber.className = "display_number"
 displayNumber.textContent = "0"
 console.log(displayNumber)
 
@@ -15,20 +16,30 @@ const numbersRows = [
     [0]
 ]
 
-const numberButtonsDiv = createNumberButton(numbersRows, displayNumber)
+const numberButtonsDiv = createButton(numbersRows, displayNumber)
+
+const operatorsRows= [
+    ["+", "-", "*", "/"]
+]
+
+const operatorButtonsDiv = createButton(operatorsRows, displayNumber)
+
+const equalButtonDiv = createEqualButton(displayNumber)
 
 document.body.appendChild(displayNumber)
 document.body.appendChild(numberButtonsDiv)
+document.body.appendChild(operatorButtonsDiv)
+document.body.appendChild(equalButtonDiv)
 
 function getButtonText(event, displayNumber) {
     event.preventDefault()
     console.log("getButtonText")
     // console.log(event.target.textContent)
     const buttonText = event.target.textContent
-    displayNumber.textContent = buttonText
+    displayNumber.textContent +=  buttonText
 }
 
-function createNumberButton(numbersRows, displayNumber) {
+function createButton(numbersRows, displayNumber) {
     const divs = document.createElement("div")
 
     numbersRows.forEach(numbers => {
@@ -47,3 +58,32 @@ function createNumberButton(numbersRows, displayNumber) {
 
     return divs
 }
+
+function getEqualButtonText(event, displayNumber) {
+    event.preventDefault()
+    const buttonText = event.target.value
+    console.log(displayNumber)
+    if (displayNumber.textContent.includes("+")) {
+        const stringNumbers =  displayNumber.textContent.split("+")
+        console.log(stringNumbers)
+
+        let total = 0
+        stringNumbers.forEach(stringNumber => {
+            total += Number(stringNumber)
+        })
+
+        displayNumber.textContent = total
+    }
+}
+
+function createEqualButton(displayNumber) {
+    const div = document.createElement("div")
+
+    const button = document.createElement("button")
+    button.textContent = "="
+    button.addEventListener("click", (event) => getEqualButtonText(event, displayNumber))
+
+    div.appendChild(button)
+
+    return div
+}   
